@@ -1,8 +1,7 @@
-# Load required libraries
 require(ggplot2)
 require(tidyverse)
 
-# Read the CSV file
+
 datL28 <- read_csv("/Users/wildtype.human/bioinformatics/cFu/AN_D28_Lungs_2024-12-30-152341.csv")
 
 # Filter datL28 to contain only values of Task = Unknown
@@ -11,7 +10,9 @@ datL28 <- read_csv("/Users/wildtype.human/bioinformatics/cFu/AN_D28_Lungs_2024-1
 # the the final Quantity value should be in CFU_TaqMan/mL
 datL28 <- datL28 %>%
   filter(Task == "Unknown" & !is.na(Sample)) %>%
-  mutate(CFU_TaqMan = (Quantity / 0.00478) / 0.002)
+  mutate(CFU_TaqMan = (Quantity / 0.00478) / 0.002, CFU_TaqMan = replace_na(CFU_TaqMan, 0))
+
+
 
 # Add "Group" column and separate "Sample" into "Group" and "Sample"
 datL28 <- datL28 %>%
@@ -20,7 +21,7 @@ datL28 <- datL28 %>%
 
 ggplot(datL28, aes(x = factor(Sample, levels = paste0("L", 1:4)), 
                    y = CFU_TaqMan, 
-                   color = Group)) +  # Add fill for grouping by "Group"
+                   fill = Group)) +  # Add fill for grouping by "Group"
   geom_boxplot() +
   scale_y_log10() +
   theme_minimal() +
