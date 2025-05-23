@@ -1,0 +1,27 @@
+---
+title: "Untitled"
+output: html_document
+date: "2025-04-30"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Calculate CFU Counts, rename:
+  
+Here we are doing stuff we need to do
+
+```{r calc_1}
+require(tidyverse)
+  # cFu_ZH_20241015_Count <- dat_Count %>%
+  #   mutate(
+  #     CFU_Count = case_when(
+  #       str_starts(Dilution, "N3") ~ Count * 1000 * 50
+  #       str_starts(Dilution, "N4") ~ Count * 10000 * 50,
+  #       str_starts(Dilution, "N5") ~ Count * 100000 * 50,
+  #       TRUE ~ NA_real_
+  #     )
+  #   )
+
+```

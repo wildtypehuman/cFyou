@@ -1,4 +1,4 @@
-#Day 3 Spleen Data
+#Day 3 Spleen TaqMan Data
 
 require(ggplot2)
 require(tidyverse)
@@ -27,21 +27,28 @@ datD3 <- datD3 %>%
 datS3 <- datD3 %>%
   filter(grepl("^Spleen", Sample))
 
+# Export as CSV
+write.csv(
+  datS3,
+  file = "datS3.csv",
+  row.names = FALSE
+)
 
-ggplot(datS3, aes(x = factor(Sample, levels = paste0("Spleen_", 1:10)), 
-                   y = CFU_TaqMan, 
-                   fill = Group)) + 
-  geom_boxplot() +
-  scale_y_log10() +
-  theme_minimal() +
-  labs(
-    title = "D3 Spleen CFU from TaqMan assuming 0.00000478ng per cell (Log Scale)",
-    x = "Sample",
-    y = "CFU_TaqMan (per mL, log scale)"
-  ) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
+# 
+# ggplot(datS3, aes(x = factor(Sample, levels = paste0("Spleen_", 1:10)), 
+#                    y = CFU_TaqMan, 
+#                    fill = Group)) + 
+#   geom_boxplot() +
+#   scale_y_log10() +
+#   theme_minimal() +
+#   labs(
+#     title = "D3 Spleen CFU from TaqMan assuming 0.00000478ng per cell (Log Scale)",
+#     x = "Sample",
+#     y = "CFU_TaqMan (per mL, log scale)"
+#   ) +
+#   theme(
+#     axis.text.x = element_text(angle = 45, hjust = 1)
+#   )
 
 
 

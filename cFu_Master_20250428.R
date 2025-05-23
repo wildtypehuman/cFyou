@@ -39,4 +39,9 @@ master_df <- bind_rows(dfs_cleaned)
 # Quick check
 glimpse(master_df)
 
-
+# Export as CSV
+write.csv(
+  master_df,
+  file = "master_df.csv",
+  row.names = FALSE
+)

@@ -23,22 +23,24 @@ df_RB_Count <- df_RB_Count %>%
   ))
 
 
-#Merge and omit redundant wells
 
-combined_df <- left_join(datR, df_RB_Count, by = "Sample")
 
-combined_df <- combined_df %>%
-  select(-Well, -Omit, -Target, -Dye, -Task)
-
-cFu_RB_20240312_TaqAndCount <- combined_df %>%
-  mutate(Date_Collected = "20240312", Collected_By = "RB")
-
-# Export as CSV
-write.csv(
-  cFu_RB_20240312_TaqAndCount,
-  file = "cFu_RB_20240312_TaqAndCount.csv",
-  row.names = FALSE
-)
+# #Merge and omit redundant wells
+# 
+# combined_df <- left_join(datR, df_RB_Count, by = "Sample")
+# 
+# combined_df <- combined_df %>%
+#   select(-Well, -Omit, -Target, -Dye, -Task)
+# 
+# cFu_RB_20240312_TaqAndCount <- combined_df %>%
+#   mutate(Date_Collected = "20240312", Collected_By = "RB")
+# 
+# # Export as CSV
+# write.csv(
+#   cFu_RB_20240312_TaqAndCount,
+#   file = "cFu_RB_20240312_TaqAndCount.csv",
+#   row.names = FALSE
+# )
 
 
 

@@ -1,0 +1,129 @@
+---
+title: "cFu_SOP_20250501"
+format: html
+editor: visual
+---
+
+## **Standard Operating Procedure (SOP) for Processing TaqMan and CFU Count Data**
+
+#### I. Analyze and Process TaqMan Data
+
+1.  Standard curve in QuantStudio
+
+2.  Export TaqMan results as a csv
+
+3.  Copy the Sample column, use formula below to extract unique values to build the CFU Count **=UNIQUE(A2:A1000)**
+
+4.  Name the TaqMan document as follows and save in cFu folder
+
+5.  **\[Project\]\_\[CollectedBy\]\_\[YYYYMMDD\]\_\[RawTaq\].csv**
+
+6.  Name the CFU Count document as follows and save in the cFu folder (add the counts later)
+
+7.  **\[Project\]\_\[CollectedBy\]\_\[YYYYMMDD\]\_\[RawCount\].csv**
+
+8.  Load required packages and load the RawTaq data into R
+
+    ```{r}
+    library(dplyr)
+
+    library(ggplot2)
+
+    library(scales)
+
+    dat_Taq <- read.csv("path_to_RaqTaq.csv")
+    ```
+
+9.  Filter the data frame and calculate CFU_TaqMan for the experiment
+
+    ```{r}
+    dat_Taq <- dat_Taq %>%
+      filter(
+        Task == "Unknown", # Choose uknowns only, no controls
+        !is.na(Sample), # Cleanup to remove empty wells if present
+        grepl("x", Sample) # Keep only samples containing "x"
+      ) %>%
+      mutate(
+        Quantity = ifelse(is.na(Quantity), 0, as.numeric(Quantity)), # If Cq is NA, assuming 0 DNA
+        CFU_TaqMan = (Quantity / 0.00478) / 0.002 / (20 / 520) #pg DNA to CFU, to 2µL to 1mL, account for sample dilution, in this case 20 µL added to 500 µL PBS
+      )
+    ```
+
+10. Add metadata and rename
+
+```{r}
+cFu_XX_YYYYMMDD_Taq <- dat_Taq %>%
+  mutate(Date_Collected = "YYYYMMDD", Collected_By = "XX")
+
+```
+
+II\. Format and Analyze CFU Plate Count Data
+
+1.  Use the RawCount file to add recorded counts in the following format
+
+    **Sample, NX, NX.1, save the csv**
+
+2.  Load packages and load data frame into R
+
+    ```{r}
+    library(dplyr)
+    library(ggplot2)
+    library(scales)
+    library(tidyr)
+    library(stringr)
+
+    dat_Count <- read.csv("path_to_RawCount.csv")
+    ```
+
+3.  Pivot longer and calculate CFU_Count values
+
+    ```{r}
+    dat_Count <- dat_Count %>%
+      mutate(
+        Dilution_N = as.numeric(str_extract(Dilution, "(?<=N)\\d+")),
+        CFU_Count = case_when(
+          !is.na(Dilution_N) & Dilution_N >= 0 & Dilution_N <= 6 ~ Count * 10^Dilution_N * 20,
+          TRUE ~ NA_real_
+        )
+      )
+    ```
+
+4.  Rename
+
+    ```{r}
+    cFu_XX_YYYYMMDD_Count <- dat_Count %>%
+      mutate(Date_Collected = "YYYYMMDD", Collected_By = "XX")
+    ```
+
+5.  Add metadata from the sample submission sheet in this precise order
+
+    ```{r}
+    		cFu_XX_YYYYMMDD_Count <- cFu_XX_YYYYMMDD_Count %>%
+    		  mutate(
+    		    Date_Collected = "YYYYMMDD",
+    		    Collected_By = "XX",
+    		    Experiment_ID = "Adoptive_transfer_sort",
+    		    Date_Plated = "Wednesday,_October_16,_2024",
+    		    Date_Read = "Tuesday,_November_12,_2024",
+    		    MTB_Strain_Type = "Erdman",
+    		    Strain_Modifications = "none",
+    		    Infection_Route = "aerosol",
+    		    Mouse_Type = "SP140-/-",
+    		    Treatment = "none",
+    		    Organ_Tissue = "Lung",
+    		    Sample_Storage = "4C_overnight",
+    		    Preprocessing = "Digested_with_LibTM_DNase",
+    		    Tissue_Homogenization_Method = "GentleMACS",
+    		    Timepoint_dpi = 25,
+    		    Log_Dilution_Factor = NA,
+    		    Media = "7H11",
+    		    Media_Additive = "none",
+    		    Plate_Type = "24_well",
+    		    Spreading_Method = "none",
+    		    Total_Plates = 11,
+    		    Number_of_Replicates = 3,
+    		    Volume_Per_Plate_uL = 20
+      )
+    ```
+
+## 

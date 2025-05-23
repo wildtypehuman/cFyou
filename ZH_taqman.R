@@ -2,7 +2,7 @@
 require(ggplot2)
 require(tidyverse)
 
-datZH <- read_csv("/Users/wildtype.human/Downloads/sc_well_table_results-2024-11-14-092841.csv")
+datZH <- read_csv("/Users/wildtype.human/bioinformatics/cFu/cFu_ZH_20241015.csv")
 
 # Filter datZH to contain only values of Task = Unknown
 # Add a new column to the datZH called CFU_TaqMan, obtain CFU_TaqMan values by dividing Quantity by 0.00478, 

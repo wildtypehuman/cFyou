@@ -15,49 +15,56 @@ dat_RP2 <- dat_RP2 %>%
 
 datR <- bind_rows(dat_RP1, dat_RP2) 
 
-
-datR <- datR %>%
-  mutate(
-    Group = sub("^(.*)_.*$", "\\1", Sample),  # Extract text before the underscore
-    Sample = sub(".*_(.*)$", "\\1", Sample)   # Extract text after the underscore
-  ) 
-
-datR$Sample <- factor(
-  datR$Sample,
-  levels = sort(unique(datR$Sample))
-)
+# Export as CSV
+# write.csv(
+#   datR,
+#   file = "datR.csv",
+#   row.names = FALSE
+# )
 
 
-datR$Group <- factor(
-  datR$Group,
-  levels = c("PBS", "IgG1", "36", "136")  
-)
-
-
-ggplot(datR, aes(x = Sample, y = CFU_TaqMan, fill = Group)) +  # Color by Group
-  geom_boxplot() +
-  scale_y_log10() +  # Log scale for y-axis
-  theme_minimal() +
-  labs(
-    title = "RB CFU from TaqMan assuming 0.00000478ng per cell (Log Scale)",
-    x = "Sample",
-    y = "CFU_TaqMan (per mL, log scale)"
-  ) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  ) 
-
-ggplot(datR, aes(x = Group, y = CFU_TaqMan, fill = Group)) +  # Color by Group
-  geom_boxplot() +
-  scale_y_log10() +  # Log scale for y-axis
-  theme_minimal() +
-  labs(
-    title = "RB CFU from TaqMan assuming 0.00000478ng per cell (Log Scale)",
-    x = "Treatment",
-    y = "CFU_TaqMan (per mL, log scale)"
-  ) +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  ) 
+# datR <- datR %>%
+#   mutate(
+#     Group = sub("^(.*)_.*$", "\\1", Sample),  # Extract text before the underscore
+#     Sample = sub(".*_(.*)$", "\\1", Sample)   # Extract text after the underscore
+#   ) 
+# 
+# datR$Sample <- factor(
+#   datR$Sample,
+#   levels = sort(unique(datR$Sample))
+# )
+# 
+# 
+# datR$Group <- factor(
+#   datR$Group,
+#   levels = c("PBS", "IgG1", "36", "136")  
+# )
+# 
+# 
+# ggplot(datR, aes(x = Sample, y = CFU_TaqMan, fill = Group)) +  # Color by Group
+#   geom_boxplot() +
+#   scale_y_log10() +  # Log scale for y-axis
+#   theme_minimal() +
+#   labs(
+#     title = "RB CFU from TaqMan assuming 0.00000478ng per cell (Log Scale)",
+#     x = "Sample",
+#     y = "CFU_TaqMan (per mL, log scale)"
+#   ) +
+#   theme(
+#     axis.text.x = element_text(angle = 45, hjust = 1)
+#   ) 
+# 
+# ggplot(datR, aes(x = Group, y = CFU_TaqMan, fill = Group)) +  # Color by Group
+#   geom_boxplot() +
+#   scale_y_log10() +  # Log scale for y-axis
+#   theme_minimal() +
+#   labs(
+#     title = "RB CFU from TaqMan assuming 0.00000478ng per cell (Log Scale)",
+#     x = "Treatment",
+#     y = "CFU_TaqMan (per mL, log scale)"
+#   ) +
+#   theme(
+#     axis.text.x = element_text(angle = 45, hjust = 1)
+#   ) 
 
 

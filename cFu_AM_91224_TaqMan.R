@@ -11,6 +11,18 @@ dat_AM_91224 <- dat_AM_91224 %>%
     Quantity = ifelse(is.na(Quantity), 0, as.numeric(Quantity)),
     CFU_TaqMan = (Quantity / 0.00478) / 0.002/(20/520))
 
+# Add metadata and rename
+
+cFu_AM_20240912_Taq <- dat_AM_91224 %>%
+  mutate(Date_Collected = "20240912", Collected_By = "AM")
+
+#Export as CSV
+write.csv(
+  cFu_AM_20240912_Taq,
+  file = "cFu_AM_20240912_Taq.csv",
+  row.names = FALSE
+)
+
 # Define the desired order of Sample levels
 ordered_samples <- c(
   paste0("AM_91224_L_", 1:12),

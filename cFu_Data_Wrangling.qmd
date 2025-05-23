@@ -1,0 +1,49 @@
+---
+title: "cFu Data Wrangling"
+format: html
+editor: visual
+---
+
+## Generating master documents
+
+```{r}
+library(tidyverse)
+
+# ------------------------
+# Function to combine CFU Count CSVs
+# ------------------------
+combine_cfu_count_csvs <- function(counts_folder_path) {
+  count_file_list <- list.files(path = counts_folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+  combined_count_df <- count_file_list %>%
+    set_names() %>%
+    map_dfr(~ read_csv(.x, col_types = cols(.default = col_character())), .id = "Source_File")
+
+  return(combined_count_df)
+}
+
+# ------------------------
+# Function to combine TaqMan CSVs
+# ------------------------
+combine_taqman_csvs <- function(taq_folder_path) {
+  taq_file_list <- list.files(path = taq_folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+  combined_taq_df <- taq_file_list %>%
+    set_names() %>%
+    map_dfr(~ read_csv(.x, col_types = cols(Cq = col_character(), .default = col_character())), .id = "Source_File")
+
+  return(combined_taq_df)
+}
+
+# ------------------------
+# Load both datasets
+# ------------------------
+
+cfu_counts_path <- "/Users/wildtype.human/bioinformatics/cFu/Count CSVs"
+taqman_path <- "/Users/wildtype.human/bioinformatics/cFu/Taq CSVs"
+
+cfu_counts_combined <- combine_cfu_count_csvs(cfu_counts_path)
+taqman_combined     <- combine_taqman_csvs(taqman_path)
+```
+
+## 
